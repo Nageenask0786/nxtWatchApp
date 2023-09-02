@@ -1,5 +1,7 @@
 import {Component} from 'react'
 
+import {Redirect} from 'react-router-dom'
+
 import Cookies from 'js-cookie'
 
 import './index.css'
@@ -105,13 +107,17 @@ class LoginForm extends Component {
 
   render() {
     const {showErrorMsg, errorMsg} = this.state
+    const jwtToken = Cookies.get('jwt_token')
+    if (jwtToken !== undefined) {
+      return <Redirect to="/" />
+    }
     return (
       <div className="login-route-light-theme">
         <div className="login-form-container-light-theme">
           <div className="website-logo-container">
             <img
               src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-              alt="website-logo"
+              alt="website logo"
               className="logo"
             />
           </div>

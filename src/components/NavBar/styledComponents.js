@@ -1,5 +1,3 @@
-import {Link} from 'react-router-dom'
-
 import styled from 'styled-components'
 
 export const NavBarContainer = styled.div`
@@ -11,30 +9,24 @@ export const NavBarContainer = styled.div`
   border-color: #f1f5f9;
   border-width: 2px;
   background-color: ${props => props.bgColor};
+  width: 100vw;
 `
 
 export const NavItems = styled.ul`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-right: 50px;
   @media screen and (max-width: 767px) {
     display: none;
   }
 `
-
-export const MenuItemContainer = styled.ul``
-export const ItemContainer = styled(Link)`
+export const Menu = styled.div`
   display: flex;
-  flex-direction: row;
-  height: 50px;
-  width: 100vw;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-`
-export const MenuItem = styled.li`
-  list-style-type: none;
-    }
+  flex-direction: column;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
 `
 
 export const WebsiteLogo = styled.img`

@@ -2,12 +2,11 @@ import {Component} from 'react'
 import {Link} from 'react-router-dom'
 
 import {FaMoon} from 'react-icons/fa'
+import {BiSun} from 'react-icons/bi'
 
-import {AiOutlineMenu, AiFillHome} from 'react-icons/ai'
-import {HiFire} from 'react-icons/hi'
-import {SiYoutubegaming} from 'react-icons/si'
-import {RiMenuAddFill} from 'react-icons/ri'
+import {AiOutlineMenu} from 'react-icons/ai'
 import Popup from 'reactjs-popup'
+import MenuBar from '../MenuBar'
 
 import AppTheme from '../../context/Theme'
 
@@ -15,14 +14,13 @@ import {
   NavBarContainer,
   NavItems,
   WebsiteLogo,
-  MenuItemContainer,
-  MenuItem,
   ListItem,
   ThemeButton,
   Profile,
   LogoutButton,
   NavItemsSmall,
   PopupContainer,
+  Menu,
 } from './styledComponents'
 
 class NavBar extends Component {
@@ -34,20 +32,29 @@ class NavBar extends Component {
           const changeTheme = () => {
             toggleTheme()
           }
-          const bgColor = isDarkTheme ? '#000000' : '#ffffff'
+          const bgColor = isDarkTheme ? '#181818' : '##f9f9f9'
+          const ThemeIcon = isDarkTheme ? (
+            <BiSun size={30} color="#ffffff" />
+          ) : (
+            <FaMoon color="#000000" size={30} />
+          )
+          const WebsiteLogoUrl = isDarkTheme
+            ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-dark-theme-img.png'
+            : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png'
           return (
             <NavBarContainer bgColor={bgColor}>
               <Link to="/">
-                <WebsiteLogo
-                  src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-                  alt="website logo"
-                />
+                <WebsiteLogo src={WebsiteLogoUrl} alt="website logo" />
               </Link>
 
               <NavItems>
                 <ListItem>
-                  <ThemeButton type="button" onClick={changeTheme}>
-                    <FaMoon size={30} />
+                  <ThemeButton
+                    type="button"
+                    onClick={changeTheme}
+                    data-testid="theme"
+                  >
+                    {ThemeIcon}
                   </ThemeButton>
                 </ListItem>
                 <ListItem>
@@ -62,47 +69,36 @@ class NavBar extends Component {
               </NavItems>
               <NavItemsSmall>
                 <ListItem>
-                  <ThemeButton type="button">
-                    <FaMoon size={30} />
+                  <ThemeButton
+                    type="button"
+                    data-testid="theme"
+                    onClick={changeTheme}
+                  >
+                    {ThemeIcon}
                   </ThemeButton>
                 </ListItem>
                 <ListItem>
-                  <Popup
-                    modal
-                    trigger={
-                      <ThemeButton type="button">
-                        <AiOutlineMenu size={30} />
-                      </ThemeButton>
-                    }
-                  >
-                    {close => (
-                      <>
-                        <LogoutButton onClick={() => close()}>
-                          Close
-                        </LogoutButton>
-                        <PopupContainer>
-                          <MenuItemContainer>
-                            <MenuItem>
-                              <AiFillHome />
-                              <p>Home</p>
-                            </MenuItem>
-                            <MenuItem>
-                              <HiFire />
-                              <p>Trending</p>
-                            </MenuItem>
-                            <MenuItem>
-                              <SiYoutubegaming />
-                              <p>Gaming</p>
-                            </MenuItem>
-                            <MenuItem>
-                              <RiMenuAddFill />
-                              <p>Saved Videos</p>
-                            </MenuItem>
-                          </MenuItemContainer>
-                        </PopupContainer>
-                      </>
-                    )}
-                  </Popup>
+                  <Menu>
+                    <Popup
+                      modal
+                      trigger={
+                        <ThemeButton type="button">
+                          <AiOutlineMenu size={30} />
+                        </ThemeButton>
+                      }
+                    >
+                      {close => (
+                        <>
+                          <LogoutButton onClick={() => close()}>
+                            Close
+                          </LogoutButton>
+                          <PopupContainer>
+                            <MenuBar />
+                          </PopupContainer>
+                        </>
+                      )}
+                    </Popup>
+                  </Menu>
                 </ListItem>
               </NavItemsSmall>
             </NavBarContainer>
