@@ -1,10 +1,12 @@
 import {Component} from 'react'
+import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 import {BiSearch} from 'react-icons/bi'
-import Loader from 'react-loader-spinner'
 import NavBar from '../NavBar'
 import AppTheme from '../../context/Theme'
 import VideoItem from '../VideoItem'
+import FailureView from '../FailureView'
+
 import {
   HomeRouteContainer,
   Container,
@@ -17,11 +19,8 @@ import {
   NoSearchResultsHeading,
   NoSearchResultsView,
   NoResultsImage,
+  VideoList,
   RetryButton,
-  FailureView,
-  FailureHeading,
-  FailurePara,
-  FailureImage,
 } from './styledComponents'
 import SideBar from '../SideBar'
 import Banner from '../Banner'
@@ -53,8 +52,8 @@ class Home extends Component {
       method: 'GET',
     }
     const response = await fetch(apiUrl, options)
-    const data = await response.json()
     if (response.ok === true) {
+      const data = await response.json()
       console.log(data)
       const formattedData = data.videos.map(each => ({
         id: each.id,
@@ -78,7 +77,7 @@ class Home extends Component {
   }
 
   onChangeSearch = event => {
-    this.setState({search: event.target.value})
+    this.setState({search: event.target.value}, this.getVideos)
   }
 
   onClickEnter = event => {
@@ -99,12 +98,11 @@ class Home extends Component {
     <AppTheme.Consumer>
       {value => {
         const {isDarkTheme} = value
-        const bgColor = isDarkTheme ? '#181818' : '#f9f9f9'
         const HeadColor = isDarkTheme ? '#f9f9f9' : '#1e293b'
         const ParaColor = isDarkTheme ? '#4f46e5' : '#475569'
         console.log(isDarkTheme)
         return (
-          <NoSearchResultsView bgColor={bgColor}>
+          <NoSearchResultsView>
             <NoResultsImage
               src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-search-results-img.png"
               alt="no videos"
@@ -124,16 +122,22 @@ class Home extends Component {
     </AppTheme.Consumer>
   )
 
+  renderHomeLoader = () => (
+    <div className="loader-container" data-testid="loader">
+      <Loader type="ThreeDots" color="black" height="50" width="50" />
+    </div>
+  )
+
   renderVideosSuccessView = () => {
     const {videosData} = this.state
     return (
       <>
         {videosData.length > 0 ? (
-          <ul>
+          <VideoList>
             {videosData.map(each => (
               <VideoItem videoItemDetails={each} key={each.id} />
             ))}
-          </ul>
+          </VideoList>
         ) : (
           this.renderNoSearchResultsView()
         )}
@@ -141,51 +145,17 @@ class Home extends Component {
     )
   }
 
-  renderFailureView = () => (
-    <AppTheme.Consumer>
-      {value => {
-        const {isDarkTheme} = value
-        const bgColor = isDarkTheme ? '#181818' : '#f9f9f9'
-        const HeadColor = isDarkTheme ? '#f9f9f9' : '#1e293b'
-        const ParaColor = isDarkTheme ? '#4f46e5' : '#475569'
-        const Url = isDarkTheme
-          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
-          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
+  renderHomeFailureView = () => <FailureView onRetry={this.onClickRetry} />
 
-        return (
-          <FailureView bgColor={bgColor}>
-            <FailureImage src={Url} alt="failure view" />
-
-            <FailureHeading Color={HeadColor}>
-              Oops! Something Went Wrong
-            </FailureHeading>
-            <FailurePara Color={ParaColor}>
-              We are having some trouble
-            </FailurePara>
-            <RetryButton type="button" onClick={this.onClickRetry}>
-              Retry
-            </RetryButton>
-          </FailureView>
-        )
-      }}
-    </AppTheme.Consumer>
-  )
-
-  renderLoader = () => (
-    <div data-testid="loader">
-      <Loader type="ThreeDots" color="#ffffff" height="50" width="50" />
-    </div>
-  )
-
-  renderHomeView = () => {
+  renderHomeFinalOutput = () => {
     const {apiStatus} = this.state
     switch (apiStatus) {
       case apiStatusConstants.success:
         return this.renderVideosSuccessView()
-      case apiStatusConstants.failure:
-        return this.renderFailureView()
       case apiStatusConstants.inProgress:
-        return this.renderLoader()
+        return this.renderHomeLoader()
+      case apiStatusConstants.failure:
+        return this.renderHomeFailureView()
       default:
         return null
     }
@@ -198,6 +168,7 @@ class Home extends Component {
         {value => {
           const {isDarkTheme} = value
           const bgColor = isDarkTheme ? '#181818' : '#f9f9f9'
+          const IconBackGround = isDarkTheme ? '#313131' : 'transparent'
           return (
             <>
               <NavBar />
@@ -205,25 +176,27 @@ class Home extends Component {
                 <Container>
                   <SideBar />
                 </Container>
-                <HomeContainer>
+                <HomeContainer bgColor={bgColor} data-testid="home">
                   <Banner />
-                  <HomeRoute bgColor={bgColor} data-testid="home">
+                  <HomeRoute>
                     <SearchContainer>
                       <InputElement
                         type="search"
                         value={search}
                         onChange={this.onChangeSearch}
                         onKeyDown={this.onClickEnter}
+                        placeholder="Search"
                       />
                       <SearchIcon
                         type="button"
                         onClick={this.onClickSearchButton}
                         data-testid="searchButton"
+                        btnBgColor={IconBackGround}
                       >
-                        <BiSearch />
+                        <BiSearch color="#606060" size={20} />
                       </SearchIcon>
                     </SearchContainer>
-                    {this.renderHomeView()}
+                    <>{this.renderHomeFinalOutput()}</>
                   </HomeRoute>
                 </HomeContainer>
               </HomeRouteContainer>

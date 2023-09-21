@@ -1,5 +1,15 @@
-import {Link} from 'react-router-dom'
-import {VideoItems, Image, Title, Para, List, Item} from './styledComponents'
+import AppTheme from '../../context/Theme'
+import {
+  VideoItems,
+  Image,
+  Title,
+  Para,
+  List,
+  Item,
+  LINK,
+  ProfileImage,
+  RowAlign,
+} from './styledComponents'
 
 const VideoItem = props => {
   const {videoItemDetails} = props
@@ -13,32 +23,37 @@ const VideoItem = props => {
   } = videoItemDetails
   const {name, profileImageUrl} = channel
   return (
-    <Link to={`/videos/${id}`}>
-      <VideoItems>
-        <Image
-          src={thumbnailUrl}
-          height="100px"
-          width="200px"
-          alt="video thumbnail"
-        />
-        <Image
-          src={profileImageUrl}
-          height="30px"
-          width="50px"
-          alt="channel logo"
-        />
-        <Title>{title}</Title>
-        <Para>{name}</Para>
-        <List>
-          <Item>
-            <Para>{viewsCount}</Para>
-          </Item>
-          <Item>
-            <Para>{publishedAt}</Para>
-          </Item>
-        </List>
-      </VideoItems>
-    </Link>
+    <AppTheme.Consumer>
+      {value => {
+        const {isDarkTheme} = value
+        const titleColor = isDarkTheme ? '#ffffff' : '#475569'
+        const paraColor = isDarkTheme ? '#ffffff' : '#475569'
+        const listColor = isDarkTheme ? '#ffffff' : '#475569'
+        return (
+          <LINK to={`/videos/${id}`}>
+            <VideoItems>
+              <Image src={thumbnailUrl} alt="video thumbnail" />
+              <RowAlign>
+                <ProfileImage src={profileImageUrl} />
+                <div>
+                  <Title color={titleColor}>{title}</Title>
+
+                  <Para color={paraColor}>{name}</Para>
+                  <RowAlign>
+                    <Para color={paraColor}>{viewsCount} views</Para>
+                    <List color={listColor}>
+                      <Item>
+                        <Para color={paraColor}>{publishedAt}</Para>
+                      </Item>
+                    </List>
+                  </RowAlign>
+                </div>
+              </RowAlign>
+            </VideoItems>
+          </LINK>
+        )
+      }}
+    </AppTheme.Consumer>
   )
 }
 

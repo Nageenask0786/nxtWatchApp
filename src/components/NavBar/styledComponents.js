@@ -1,22 +1,20 @@
 import styled from 'styled-components'
 
-export const NavBarContainer = styled.div`
+export const NavBarContainer = styled.nav`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  border-style: solid;
-  border-color: #f1f5f9;
-  border-width: 2px;
   background-color: ${props => props.bgColor};
+  justify-content: center;
+  height: 15vh;
   width: 100vw;
+  align-items: center;
 `
 
-export const NavItems = styled.ul`
+export const NavItems = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  margin-right: 50px;
+  justify-content: space-between;
+  width: 70%;
+
   @media screen and (max-width: 767px) {
     display: none;
   }
@@ -30,13 +28,16 @@ export const Menu = styled.div`
 `
 
 export const WebsiteLogo = styled.img`
-  height: 40px;
-  margin-left: 40px;
-  width: 100px;
+  width: 150px;
+  padding-left: 10px;
+  margin-left: 10px;
+  @media screen and (max-width: 767px) {
+    width: 80px;
+  }
 `
-export const ListItem = styled.li`
-  list-style-type: none;
-  margin: 15px;
+export const Div = styled.div`
+  width: 100vw;
+  height: 100vh;
 `
 export const ThemeButton = styled.button`
   outline: none;
@@ -57,11 +58,12 @@ export const LogoutButton = styled.button`
   color: #4f46e5;
   font-weight: bold;
 `
-export const NavItemsSmall = styled.ul`
+export const NavItemsSmall = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  @media screen and (min-width: 767px) {
+  justify-content: space-between;
+  width: 70%;
+  @media screen and (min-width: 768px) {
     display: none;
   }
 `
