@@ -128,7 +128,7 @@ class VideoItemDetails extends Component {
     return (
       <AppTheme.Consumer>
         {value => {
-          const {isDarkTheme} = value
+          const {isDarkTheme, addSavedVideos} = value
           const setData = () => {
             localStorage.setItem('Data', JSON.stringify(videoItemDetails))
           }
@@ -139,8 +139,7 @@ class VideoItemDetails extends Component {
             console.log(videos)
           }
           const onClickOfSave = () => {
-            setData()
-            getData()
+            addSavedVideos(videoItemDetails)
           }
           const color = isDarkTheme ? '#ffffff' : '#1e293b'
           return (
