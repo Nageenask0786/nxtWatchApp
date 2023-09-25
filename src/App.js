@@ -26,19 +26,35 @@ class App extends Component {
     }))
   }
 
+  removeVideo = id => {
+    const {savedVideosList} = this.state
+    const updatedSavedVideos = savedVideosList.filter(
+      eachVideo => eachVideo.id !== id,
+    )
+    this.setState({savedVideosList: updatedSavedVideos})
+  }
+
   changeTab = tab => {
     this.setState({activeTab: tab})
   }
 
   addSavedVideos = video => {
-    this.setState(prevState => ({
-      savedVideosList: [...prevState.savedVideosList, video],
-    }))
+    const {savedVideosList} = this.state
+    const index = savedVideosList.findIndex(
+      eachVideo => eachVideo.id === video.id,
+    )
+    if (index === -1) {
+      this.setState({savedVideosList: [...savedVideosList, video]})
+    } else {
+      savedVideosList.splice(index, 1)
+      this.setState({savedVideosList})
+    }
   }
 
   render() {
     const {isDarkTheme, savedVideosList, activeTab} = this.state
     console.log(activeTab)
+    console.log(savedVideosList)
     return (
       <AppTheme.Provider
         value={{
@@ -48,6 +64,7 @@ class App extends Component {
           savedVideosList,
           activeTab,
           changeTab: this.changeTab,
+          removeVideo: this.removeVideo,
         }}
       >
         <Switch>

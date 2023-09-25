@@ -39,6 +39,7 @@ class VideoItemDetails extends Component {
     videoItemDetails: {},
     clickLike: false,
     clickDisLike: false,
+    clickSave: false,
     apiStatus: apiStatusConstants.initial,
   }
 
@@ -89,15 +90,25 @@ class VideoItemDetails extends Component {
   }
 
   onClickOfLikeButton = () => {
-    this.setState({clickLike: true, clickDisLike: false})
+    this.setState(prevState => ({
+      clickLike: !prevState.clickLike,
+      clickDisLike: false,
+    }))
   }
 
   onClickOfDisLikeButton = () => {
-    this.setState({clickDisLike: true, clickLike: false})
+    this.setState(prevState => ({
+      clickDisLike: !prevState.clickDisLike,
+      clickLike: false,
+    }))
   }
 
   onClickOfRetryButton = () => {
     this.getVideoItemDetails()
+  }
+
+  onClickSaveButton = () => {
+    this.setState(prevState => ({clickSave: !prevState.clickSave}))
   }
 
   getFormattedDate = () => {
@@ -124,24 +135,28 @@ class VideoItemDetails extends Component {
     const publishedDate = this.getFormattedDate()
     const likeColor = clickLike ? '#2563eb' : '#64748b'
     const dislikeColor = clickDisLike ? '#2563eb' : '#64748b'
-    let videos = []
     return (
       <AppTheme.Consumer>
         {value => {
-          const {isDarkTheme, addSavedVideos} = value
-          const setData = () => {
-            localStorage.setItem('Data', JSON.stringify(videoItemDetails))
-          }
-          const getData = () => {
-            const result = localStorage.getItem('Data')
-            const parsedResult = JSON.parse(result)
-            videos = [...videos, parsedResult]
-            console.log(videos)
-          }
+          const {isDarkTheme, addSavedVideos, savedVideosList} = value
           const onClickOfSave = () => {
             addSavedVideos(videoItemDetails)
           }
           const color = isDarkTheme ? '#ffffff' : '#1e293b'
+          let isSaved
+          const index = savedVideosList.findIndex(
+            eachVideo => eachVideo.id === videoItemDetails.id,
+          )
+          if (index === -1) {
+            isSaved = false
+          } else {
+            isSaved = true
+          }
+
+          const btnText = isSaved ? 'Saved' : 'Save'
+
+          const saveIconColor = isSaved ? '#2563eb' : '#64748b'
+
           return (
             <>
               <Player>
@@ -174,9 +189,9 @@ class VideoItemDetails extends Component {
                 <Button
                   type="button"
                   onClick={onClickOfSave}
-                  buttonColor="#64748b"
+                  buttonColor={saveIconColor}
                 >
-                  Save <RiMenuAddFill />
+                  {btnText} <RiMenuAddFill />
                 </Button>
               </Flex>
               {channelDefined && (
